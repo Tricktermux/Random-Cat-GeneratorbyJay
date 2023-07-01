@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Random Cat Image/Video Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap" rel="stylesheet">
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Great Vibes', cursive;
+      background-color: #f5f5f5;
+      color: #333;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      padding: 20px;
+    }
+
+    body.dark-mode {
+      background-color: #333;
+      color: #f5f5f5;
+    }
+
+    h1 {
+      margin-top: 0;
+      text-align: center;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .cat-image {
+      max-width: 100%;
+      border-radius: 8px;
+      outline: 2px solid;
+      box-shadow: 0 0 8px 2px rgba(255, 255, 255, 0.4);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .button-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .button-container button {
+      margin: 10px;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      background-color: #fff;
+      color: #333;
+      border: 2px solid #333;
+      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+      font-family: 'EB Garamond', serif;
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .dark-mode .button-container button {
+      background-color: #333;
+      color: #fff;
+      border-color: #fff;
+      box-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
+    }
+
+    .dark-mode-button {
+      padding: 10px;
+      font-size: 24px;
+      color: #fff;
+      background-color: #333;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .dark-mode .dark-mode-button {
+      background-color: #f5f5f5;
+      color: #333;
+    }
+
+    .dark-mode .dark-mode-button .sun-icon {
+      display: none;
+    }
+
+    .dark-mode .dark-mode-button .moon-icon {
+      display: inline;
+    }
+
+    .sun-icon::before {
+      content: 'Light Mode';
+    }
+
+    .moon-icon::before {
+      content: 'Dark Mode';
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .credits-bar {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .dark-mode .credits-bar {
+      background-color: #333;
+      color: #fff;
+      box-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
+    }
+  </style>
+</head>
+<body>
+  <h1>Random Cat Image/Video Generator</h1>
+  <div class="container">
+    <img class="cat-image" id="catImage" src="" alt="Random Cat Image/Video">
+    <div class="button-container">
+      <button id="getImageButton" onclick="getRandomCatImage()">Get Random Cat Image/Video</button>
+      <button id="resetButton" onclick="resetCatImage()">Reset Image/Video</button>
+      <button class="dark-mode-button" onclick="toggleDarkMode()">
+        <span class="moon-icon"></span>
+        <span class="sun-icon hidden"></span>
+      </button>
+    </div>
+  </div>
+  
+  <div class="credits-bar">
+    Created by <a href="https://t.me/CoderSensui">Sensui</a> | YouTube: <a href="https://youtube.com/@CodingWithSensui">CodingWithSensui</a></p>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const body = document.body;
+      const buttons = document.querySelectorAll('button');
+      const darkModeButton = document.querySelector('.dark-mode-button');
+      const sunIcon = darkModeButton.querySelector('.sun-icon');
+      const moonIcon = darkModeButton.querySelector('.moon-icon');
+      const catImage = document.getElementById('catImage');
+      const creditsBar = document.querySelector('.credits-bar');
+
+      // Set initial display
+      sunIcon.style.display = 'none';
+      moonIcon.style.display = 'inline';
+
+      function getRandomCatImage() {
+        // Using thecatapi.com to fetch random cat image
+        fetch('https://api.thecatapi.com/v1/images/search')
+          .then(response => response.json())
+          .then(data => {
+            catImage.src = data[0].url;
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      }
+
+      function resetCatImage() {
+        catImage.src = '';
+      }
+
+      function toggleDarkMode() {
+        body.classList.toggle('dark-mode');
+        buttons.forEach(button => button.classList.toggle('dark-mode'));
+        creditsBar.classList.toggle('dark-mode');
+
+        if (body.classList.contains('dark-mode')) {
+          sunIcon.style.display = 'inline';
+          moonIcon.style.display = 'none';
+        } else {
+          moonIcon.style.display = 'inline';
+          sunIcon.style.display = 'none';
+        }
+
+        updateImageOutlineColor();
+        updateButtonGlowEffect();
+      }
+
+      function updateImageOutlineColor() {
+        const outlineColor = body.classList.contains('dark-mode') ? '#fff' : '#000';
+        catImage.style.outlineColor = outlineColor;
+      }
+      
+      function updateButtonGlowEffect() {
+        const glowColor = body.classList.contains('dark-mode') ? '#fff' : '#000';
+        buttons.forEach(button => {
+          button.style.boxShadow = `0 0 4px 1px ${glowColor}`;
+        });
+      }
+
+      const getImageButton = document.getElementById('getImageButton');
+      const resetButton = document.getElementById('resetButton');
+      getImageButton.addEventListener('click', getRandomCatImage);
+      resetButton.addEventListener('click', resetCatImage);
+      darkModeButton.addEventListener('click', toggleDarkMode);
+    });
+  </script>
+</body>
+<p>Source code of this project: <a href="https://github.com/CoderSensui/Random-Cat-Photo-Video-Generator">GITHUB</a></p>
+  </html>
+                                                                          
