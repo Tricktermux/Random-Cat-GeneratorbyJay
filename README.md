@@ -2,7 +2,7 @@
 
 **rcg or Random Cat Photo/Video Generator** 
 
-**Example Link : **https://sensui-useless-projects.codersensui.repl.co/projects/rcg
+**Example Link :** https://sensui-useless-projects.codersensui.repl.co/projects/rcg
 
 **Source Code Advancements**
 
